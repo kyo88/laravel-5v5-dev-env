@@ -1,0 +1,20 @@
+---
+- name: Update post_max_size
+  lineinfile: dest=/etc/php.ini regexp="^post_max_size" line="post_max_size = 100M"
+  tags: php-config
+  notify: restart php-fpm
+
+- name: Update upload_max_filesize
+  lineinfile: dest=/etc/php.ini regexp="^upload_max_filesize" line="upload_max_filesize = 15M"
+  tags: php-config
+  notify: restart php-fpm
+
+- name: Update max_execution_time
+  lineinfile: dest=/etc/php.ini regexp="^max_execution_time" line="max_execution_time = 300"
+  tags: php-config
+  notify: restart php-fpm
+
+- name: Disable php version
+  lineinfile: dest=/etc/php.ini regexp="^expose_php" line="expose_php = off"
+  tags: php-config
+  notify: restart php-fpm

@@ -1,0 +1,32 @@
+---
+- hostname: name={{ host_name }}
+
+- name: Update latest packages
+  yum: name=* state=latest update_cache=yes
+
+- name: Install common packages
+  yum: name={{ item }} state=latest
+  with_items:
+    - git
+    - vim
+    - gcc
+    - yum-utils
+    - libselinux-python
+    - epel-release
+
+- name: Add web user
+  user:
+    name: "{{ web_user }}"
+    comment: "Web user"
+    # group: "{{ web_group }}"
+
+- name: disable sellinux
+  shell: setenforce 0
+  sudo: yes
+
+- name: enable authen ssh by password
+  lineinfile:
+    - path: /etc/ssh/sshd_config
+    - regrex: '^PasswordAuthentication no'
+    - line: 'PasswordAuthentication yes'
+  notify: restart sshd

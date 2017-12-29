@@ -1,0 +1,42 @@
+---
+- name: Update RHEL
+  yum: name={{ item }} state=present
+  with_items:
+    - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    - https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+
+- name: "Install php70 packages"
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "php70w"
+    - "php70w-cli"
+    - "php70w-common"
+    - "php70w-fpm"
+    - "php70w-mysqlnd"
+    - "php70w-opcache"
+    - "php70w-pdo"
+
+- name: PHP Custom configuration
+  include: php_config.yml
+
+- name: Disable default pool
+  command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
+  notify: restart php-fpm
+
+- name: Copy php-fpm configuration
+  template: src=laravel.conf dest=/etc/php-fpm.d/
+  notify: restart php-fpm
+  tags: php-fpm-config
+
+# - name: Create project folder
+#   shell: mkdir -p {{ web_path }}
+
+- name: Create web directory
+  file:
+    path: "{{ web_path }}"
+    recurse: yes
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    state: directory

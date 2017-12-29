@@ -1,0 +1,2 @@
+[php]
+192.168.33.88 host_name="php" ansible_user=vagrant ansible_become=yes

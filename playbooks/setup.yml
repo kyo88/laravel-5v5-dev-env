@@ -1,0 +1,11 @@
+---
+- name: Setup deployer user
+  hosts:
+    - php
+  remote_user: root
+  become: no
+
+  roles:
+    # - common
+    - nginx
+    - php-fpm

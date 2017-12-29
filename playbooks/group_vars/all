@@ -1,0 +1,12 @@
+---
+# php-fpm
+web_path: /var/www/web
+web_sock: /var/run/php-fpm/web.sock
+# User for source
+web_group: nginx
+web_user: nginx
+
+#nginx
+sendfile: "off"
+gzip: "off"
+server_hostname: localhost
