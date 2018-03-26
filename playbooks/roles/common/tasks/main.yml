@@ -20,13 +20,16 @@
     comment: "Web user"
     # group: "{{ web_group }}"
 
-- name: disable sellinux
-  shell: setenforce 0
+- name: Disable sellinux
+  lineinfile:
+    path: /etc/sysconfig/selinux
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
   sudo: yes
 
-- name: enable authen ssh by password
-  lineinfile:
-    - path: /etc/ssh/sshd_config
-    - regrex: '^PasswordAuthentication no'
-    - line: 'PasswordAuthentication yes'
-  notify: restart sshd
+# - name: Enable authen ssh by password
+#   lineinfile:
+#     - path: /etc/ssh/sshd_config
+#     - regrex: '^PasswordAuthentication no'
+#     - line: 'PasswordAuthentication yes'
+#   notify: restart sshd

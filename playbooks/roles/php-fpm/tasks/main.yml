@@ -17,6 +17,8 @@
     - "php70w-mysqlnd"
     - "php70w-opcache"
     - "php70w-pdo"
+    - "php70w-mbstring"
+    - "php70w-xml"
 
 - name: PHP Custom configuration
   include: php_config.yml
@@ -30,13 +32,18 @@
   notify: restart php-fpm
   tags: php-fpm-config
 
+- name: Start on boot
+  service:
+    name: php-fpm
+    enabled: yes
+
 # - name: Create project folder
 #   shell: mkdir -p {{ web_path }}
 
-- name: Create web directory
-  file:
-    path: "{{ web_path }}"
-    recurse: yes
-    owner: "{{ web_user }}"
-    group: "{{ web_group }}"
-    state: directory
+# - name: Create web directory
+#   file:
+#     path: "{{ web_path }}"
+#     recurse: yes
+#     owner: "{{ web_user }}"
+#     group: "{{ web_group }}"
+#     state: directory
