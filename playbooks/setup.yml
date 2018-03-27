@@ -6,7 +6,7 @@
   become: no
 
   roles:
-    # - common
-    # - nginx
-    # - php-fpm
-    - mysql
+    - common
+    - nginx
+    - php-fpm
+    # - mysql
