@@ -7,5 +7,6 @@
 
   roles:
     # - common
-    - nginx
-    - php-fpm
+    # - nginx
+    # - php-fpm
+    - mysql

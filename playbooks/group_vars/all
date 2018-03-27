@@ -10,3 +10,11 @@ web_user: nginx
 sendfile: "off"
 gzip: "off"
 server_hostname: localhost
+
+
+#MySQL
+mysql_install_path: "/tmp/mysql"
+mysql_root_password: Tremocoi@123456
+mysql_db: web
+mysql_user: web
+mysql_pass: Tremocoi@654321

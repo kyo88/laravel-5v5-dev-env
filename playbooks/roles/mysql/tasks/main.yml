@@ -1,0 +1,50 @@
+- name: Create web directory
+  file:
+    path: "{{ mysql_install_path }}"
+    recurse: yes
+    state: directory
+
+- name: Download MySQL rpm
+  shell:  |
+    cd {{ mysql_install_path }}
+    wget https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+    sudo rpm -ivh mysql57-community-release-el7-9.noarch.rpm
+    sudo yum install mysql-server -y
+- name: "Install the Python MySQLdb module"
+  yum: name=MySQL-python
+
+- name: Start MySQL
+  service:
+    name: mysqld
+    state: started
+
+- name: Get root password
+  shell: |
+    sudo grep 'temporary password' /var/log/mysqld.log |  awk '{split($0,A," "); print A[length(A)]}'
+  register: command_output
+
+- set_fact:
+    string_to_echo: "{{ command_output.stdout }}"
+
+- debug: msg="{{string_to_echo}}"
+
+- name: Set root user password
+  shell: |
+    mysql -u root --password='{{string_to_echo}}' -e "SET PASSWORD = PASSWORD('{{ mysql_root_password }}')" --connect-expired-password
+  ignore_errors: yes
+
+- name: Create a new database with name '{{ mysql_db }}'
+  mysql_db:
+    name: "{{ mysql_db }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Create MySQL user
+  mysql_user:
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_pass }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
